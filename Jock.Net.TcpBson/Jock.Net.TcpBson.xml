@@ -1,0 +1,503 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Jock.Net.TcpBson</name>
+    </assembly>
+    <members>
+        <member name="T:Jock.Net.TcpBson.SafeThreadObject">
+            <summary>
+            Provides an internal running thread management object
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.SafeThreadObject.IsRunning">
+            <summary>
+            Whether the internal thread is running
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.SafeThreadObject.ThreadState">
+            <summary>
+            Gets a value containing the states of the internal thread.
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.SafeThreadObject.Start">
+            <summary>
+            Start the service thread
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.SafeThreadObject.OnStop">
+            <summary>
+            Calling the <c>Stoped</c> event
+            </summary>
+        </member>
+        <member name="E:Jock.Net.TcpBson.SafeThreadObject.Stoped">
+            <summary>
+            Triggered when an internal thread is stopped
+            </summary>
+        </member>
+        <member name="E:Jock.Net.TcpBson.SafeThreadObject.UnhandledException">
+            <summary>
+            Occurs when an unhandled exception occurs on an internal thread
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.SafeThreadObject.DoRun(System.Threading.CancellationToken)">
+            <summary>
+            Triggered when an unhandled exception occurs on an internal thread
+            </summary>
+            <param name="token">Triggering a cancellation notification when the user calls the Stop method</param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.SafeThreadObject.Stop">
+            <summary>
+            Notifies the internal thread to stop running
+            <para>
+            The internal execution thread must handle the <c>CancellationToken</c> to respond to the stop state.
+            </para>
+            </summary>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonClient">
+            <summary>
+            Bson Communication Client
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.#ctor">
+            <summary>
+            Create a <c>TcpBsonClient</c> with out <c>IPEndPoint</c>.
+            Must start by `Start(IPEndPoint remoteEP)` method.
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.Start(System.Net.IPEndPoint,Jock.Net.TcpBson.TcpBsonConnectionDeniedEventHandler)">
+            <summary>
+            Start core thread
+            </summary>
+            <param name="remoteEP">the Endpoint you want connect</param>
+            <param name="connectionDeniedEventHandler">a eventhandler invoke if connection denied</param>
+            <exception cref="T:System.ArgumentNullException">remoteEP and connectionDeniedEventHandler can not null</exception>
+            <exception cref="T:System.NotSupportedException"></exception>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.#ctor(System.Net.IPEndPoint)">
+            <summary>
+            Connect to the specified service side
+            </summary>
+            <param name="remoteEP">The service endpoint to connect to</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.Net.Sockets.SocketException"></exception>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.GetNamedStream(System.String)">
+            <summary>
+            Gets a named Stream object
+            </summary>
+            <param name="name">Stream name</param>
+            <returns>Named stream</returns>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonClient.Client">
+            <summary>
+            The associated <c>TcpClient</c> object
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonClient.PingTimeSpan">
+            <summary>
+            Interval for automatic Ping
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonClient.Session">
+            <summary>
+            Correlation variable Pool, Hot any value in local <c>TcpBsonClient</c>
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonClient.Cookies">
+            <summary>
+            Cookies what can auto sync between two connected <c>TcpBsonClient</c>
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.DoRun(System.Threading.CancellationToken)">
+            <summary>
+            Internal thread Run code
+            </summary>
+            <param name="token">Triggering a cancellation notification when the user calls the Stop method</param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.SendCommand(System.String,System.Action)">
+            <summary>
+            Send a command
+            </summary>
+            <param name="command">Command</param>
+            <param name="callback">Post-Send callback</param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.SendObject``1(``0,System.Action)">
+            <summary>
+            Send an Object
+            </summary>
+            <typeparam name="T">Object type</typeparam>
+            <param name="obj">Object</param>
+            <param name="callback">Post-Send callback</param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.SendRequest``1(System.String,``0,System.Int32)">
+            <summary>
+            Sync Send an Request and wait Response
+            </summary>
+            <typeparam name="TRequest">Response Object Type</typeparam>
+            <param name="uri">A request uri</param>
+            <param name="obj">Request object</param>
+            <param name="millisecondsTimeout">Response timeout milliseconds, Default is one Minute.</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.SendRequestAsync``1(System.String,``0,System.Int32)">
+            <summary>
+            Async Send an Request and wait Response
+            </summary>
+            <typeparam name="TRequest">Response Object Type</typeparam>
+            <param name="uri">A request uri</param>
+            <param name="obj">Request object</param>
+            <param name="millisecondsTimeout">Max wait response time</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.SendBytes(System.Byte[],System.Action)">
+            <summary>
+            Send a bytes block
+            </summary>
+            <param name="bytes">data to send</param>
+            <param name="callback">Post-Send callback</param>
+            <exception cref="T:System.ArgumentNullException">
+            <c>bytes</c> is null
+            </exception>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.OnStop">
+            <summary>
+            Triggering stoped Events
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.OnReceiveCommand(System.Action{System.String})">
+            <summary>
+            Register callback when command is received
+            </summary>
+            <param name="callback">callback method</param>
+            <returns></returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.OnReceive``1(System.Action{``0,Jock.Net.TcpBson.TcpBsonClient})">
+            <summary>
+            Register callback when a specific type of object is received
+            </summary>
+            <typeparam name="T">Type of object received</typeparam>
+            <param name="callback">callback method</param>
+            <returns></returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.OnReceiveRequest``2(System.String,System.Func{``0,Jock.Net.TcpBson.TcpBsonClient,``1})">
+            <summary>
+            Register callback response specific type request
+            </summary>
+            <typeparam name="TRequest">The Request type can be handle</typeparam>
+            <typeparam name="TResponse">The response type callback return</typeparam>
+            <param name="uri">A request resorce uri</param>
+            <param name="callback">Invoke when Receive a <c>TRequest</c> request</param>
+            <returns></returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.OnReceiveBytes(System.Action{System.Byte[],Jock.Net.TcpBson.TcpBsonClient})">
+            <summary>
+            Register callback when a bytes block is received
+            </summary>
+            <param name="callback"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonClient.OnStoped(System.Action{Jock.Net.TcpBson.TcpBsonClient})">
+            <summary>
+            Callback when stopped
+            </summary>
+            <param name="callback">callback method</param>
+            <returns></returns>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonConnectionDeniedEventArgs">
+            <summary>
+            EventArgs for TcpBsonClient connection denied
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonConnectionDeniedEventArgs.Client">
+            <summary>
+            TcpBsonClient instance
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonConnectionDeniedEventArgs.Retry">
+            <summary>
+            set True if want try reconnection
+            </summary>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonConnectionDeniedEventHandler">
+            <summary>
+            Delegate for TcpBsonClient connection denied
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonCookies">
+            <summary>
+            Hold a collection of name string cookies, Auto sync between tow connected <c>TcpBsonClient</c>.
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonCookies.Item(System.String)">
+            <summary>
+            Get or set cookie by spec key.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonCookies.Keys">
+            <summary>
+            Gets a collection containing the keys in the <c>TcpBsonCookies</c>
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonCookies.Values">
+            <summary>
+            Gets a collection containing the values in the <c>TcpBsonCookies</c>
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonCookies.Count">
+            <summary>
+            Gets this number of cookies contained in the <c>TcpBsonCookies</c>
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonCookies.IsReadOnly">
+            <summary>
+            Cookies is read only, allow return <c>false</c>.
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.Add(System.String,System.String)">
+            <summary>
+            Add a cookie to the cookies.
+            </summary>
+            <param name="key">Cookie name</param>
+            <param name="value">Cookie value</param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.Add(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            Add a cookie to the cookies
+            </summary>
+            <param name="item">A <c>KeyValuePair&lt;string, string&gt;</c> has Key and Value</param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.BeginInit">
+            <summary>
+            Begin a init, This will pause cookie sync.
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.Clear">
+            <summary>
+            Clear all cookies
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.Contains(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            Determines whether the <c>TcpBsonCookies</c>contains the specified key and equal value.
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.ContainsKey(System.String)">
+            <summary>
+            Determines whether the <c>TcpBsonCookies</c>contains the specified key.
+            </summary>
+            <param name="key">The key to locate in the <c>TcpBsonCookies</c></param>
+            <returns></returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.CopyTo(System.Collections.Generic.KeyValuePair{System.String,System.String}[],System.Int32)">
+            <summary>
+            Copy all item to array
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.EndInit">
+            <summary>
+            End a init, This will restore cookie sync.
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the <c>TcpBsonCookies</c>
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.Remove(System.String)">
+            <summary>
+            Removes the value with the specified key from the <c>TcpBsonCookies</c>
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.Remove(System.Collections.Generic.KeyValuePair{System.String,System.String})">
+            <summary>
+            Removes the value with the specified key from the <c>TcpBsonCookies</c>
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonCookies.TryGetValue(System.String,System.String@)">
+            <summary>
+            Try Get Value with the specified key
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonNamedStream">
+            <summary>
+            Provides a named stream associated with the <c>TcpBsonClient</c> , which re-uses the existing network stream channel
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.Name">
+            <summary>
+            Get named
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.CanRead">
+            <summary>
+            Gets whether the stream is readable and always returns true
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.CanSeek">
+            <summary>
+            Whether the stream can be accessed in a non-sequential order and always returns false
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.CanWrite">
+            <summary>
+            Whether the stream is writable and always returns false
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.AutoFlush">
+            <summary>
+            Whether auto invoke <c>Flush()</c> after <c>Write()</c> is invoked 
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.Length">
+            <summary>
+            Get stream length, always trigger <c>NotSupportedException</c> exception
+            </summary>
+            <exception cref="T:System.NotSupportedException" />
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.Position">
+            <summary>
+            Gets or sets the stream access offset, which always triggers the <c>notsupportedexception</c> exception
+            </summary>
+            <exception cref="T:System.NotSupportedException" />
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonNamedStream.Flush">
+            <summary>
+            Flush stream send all write data to remote
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonNamedStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Reads a block of bytes from the current stream and writes the data to a buffer.
+            </summary>
+            <param name="buffer">
+            When this method returns, contains the specified byte array with the values between
+            offset and (offset + count - 1) replaced by the characters read from the current
+            stream.
+            </param>
+            <param name="offset">
+            The zero-based byte offset in buffer at which to begin storing data from the current stream.
+            </param>
+            <param name="count">
+            The maximum number of bytes to read.
+            </param>
+            <returns>
+            The total number of bytes written into the buffer. This can be less than the
+                number of bytes requested if that number of bytes are not currently available,
+                or zero if the end of the stream is reached before any bytes are read.</returns>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonNamedStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <summary>
+            Seek access position, Always throw <c>NotSupportedException</c>
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonNamedStream.SetLength(System.Int64)">
+            <summary>
+            Seek stream length, Always throw <c>NotSupportedException</c>
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonNamedStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Writes a block of bytes to the current stream using data read from a buffer.
+            </summary>
+            <param name="buffer">The buffer to write data from.</param>
+            <param name="offset">The zero-based byte offset in buffer at which to begin copying bytes to the current stream.</param>
+            <param name="count">The maximum number of bytes to write.</param>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonNamedStream.DataAvailable">
+            <summary>
+            Gets the number of characters received that have not yet been read
+            </summary>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonServer">
+            <summary>
+            Json Communication Service Side
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonServer.#ctor(System.Net.IPEndPoint)">
+             <summary>
+            Create a Json Communication server
+             </summary>
+             <param name="listenerPoint">Listening port</param>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonServer.Clients">
+            <summary>
+            Get all connected clients
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonServer.WaitPendingTime">
+            <summary>
+            Test interval to wait for next connection (microseconds)
+            </summary>
+        </member>
+        <member name="E:Jock.Net.TcpBson.TcpBsonServer.Connecting">
+            <summary>
+            When a remote client connection occurs, you can set the <c>Cancel</c> property to cancel the connection
+            </summary>
+        </member>
+        <member name="E:Jock.Net.TcpBson.TcpBsonServer.Connected">
+            <summary>
+            Triggered when a remote client connection is complete
+            </summary>
+        </member>
+        <member name="M:Jock.Net.TcpBson.TcpBsonServer.DoRun(System.Threading.CancellationToken)">
+            <summary>
+            Internal thread Run code
+            </summary>
+            <param name="token">Triggering a cancellation notification when the user calls the Stop method</param>
+        </member>
+        <member name="T:Jock.Net.TcpBson.ConnectingEventHandler">
+            <summary>
+            Callback when providing a new client connection
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Jock.Net.TcpBson.ConnectingEventArgs">
+            <summary>
+            Callback parameters when a new client connects
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.ConnectingEventArgs.Client">
+            <summary>
+            <c>TcpClient</c> object to which the client establishes a connection
+            </summary>
+        </member>
+        <member name="T:Jock.Net.TcpBson.ConnectedEventHandler">
+            <summary>
+            Provides callbacks when a client completes a connection
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Jock.Net.TcpBson.ConnectedEventArgs">
+            <summary>
+            Callback parameters when the client finishes the connection
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.ConnectedEventArgs.ServerClient">
+            <summary>
+            Client Communication End Object
+            </summary>
+        </member>
+        <member name="T:Jock.Net.TcpBson.TcpBsonServerClient">
+            <summary>
+            The communication side of the Bson server
+            </summary>
+        </member>
+        <member name="P:Jock.Net.TcpBson.TcpBsonServerClient.Server">
+            <summary>
+            Get the relevant service side <c>TcpBsonServer</c>
+            </summary>
+        </member>
+    </members>
+</doc>
